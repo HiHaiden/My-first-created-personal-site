@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<title>Калькулятор</title>
+	<link rel="stylesheet" href="https://necolas.github.io/normalize.css/8.0.1/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../CSS_Style/Vse_Stili.css">
+	<link rel="shortcut icon" type="image/x-icon" href="../Backgrounds_and_Images/Heart.png">
+	<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+	<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+
+<body>
+	<div class="s5">
+		<div class="vern">
+			<div class="mind_title_q">Калькулятор на JavaScript</div>
+			<div class="colstory">Калькулятор умеет переводить цифры из одной системы счисления в другую.
+                            То, как пользоваться им: сначало вводим в строку цифру, которую хотим перевести,
+                            потом base и цифру по какой системе счисления считать цифру и в конце 
+                            to base и цифру системы
+                            счисления в которую надо перевести. Начальный пример: "123 base 10 to base 2". Этому
+                            примеру послужит ответ: "convert 123 to base 2 = 1111011 (2)". 
+      </div>
+			<script>
+"use strict";
+function convert(number, fromBase, toBase) {
+  return fromDec(toDec(number, fromBase), toBase);
+}
+function toDec(number, fromBase) {
+  var result = 0;
+  number = number.toString().toLowerCase().split('');
+  for(var index = 0, length = number.length, digit; index < length; index++) {
+    digit = prepareDigit(number[index]);
+    result = result * fromBase + digit;
+  }
+  return result;
+}
+function fromDec(number, toBase) {
+  var result = [], integerPart, digit;
+  while(number >= 1) {
+    integerPart = parseInt(number/toBase);
+    digit = number - toBase * integerPart;
+    if(digit >= 10)
+      digit = String.fromCharCode(digit + 87);
+    result.unshift(digit);
+    number = integerPart;
+  }
+  return result.join('');
+}
+function prepareDigit(digit) {
+  digit = digit.charCodeAt() - 48;
+  if(digit > 48)
+    digit -= 39;
+  return digit;
+}
+function onClick(q) {
+  var BASES = {
+    'bin': '2',
+    'oct': '8',
+    'dec': '10',
+    'hex': '16' 
+  };
+  var PATTERN = /([\dabcdef]+)(?:\s*(?:from|из|\s)(?:\s*base)?\s*(\d+|bin|oct|dec|hex))?\s*(?:(?:to|в)(?:\s*base)?\s*(\d+|bin|oct|dec|hex))?/;
+  var PATTERN_BASE = /bin|oct|dec|hex/;
+  var value = document.getElementById('inpution').value || q || '';
+  var match = value.match(PATTERN);
+  var number = match && match[1] || '0';
+  var from = match && match[2];
+  var to = match && match[3];
+  if(PATTERN_BASE.test(from)) {
+    from = BASES[from];
+  }
+  if(PATTERN_BASE.test(to)) {
+    to = BASES[to];
+  }
+  from = +from || 10;
+  to = +to || 10;
+  var result = convert(number, from , to);
+  document.getElementById('result').innerHTML = 'convert <span class="hightlight">' + number.toUpperCase() + '<sub>' + (from == 10 ? '' : from) + '</sub></span> to <span class="hightlight">base ' + to + '</span> = ' + result.toUpperCase() + '<sub>' + (to == 10 ? '' : to)  + '</sub>';
+}
+function example(q) {
+  document.getElementById('inpution').value = q;
+  onClick();
+}
+</script>
+<div class= "colcu">
+<div>
+  <input style="margin: 1%; font-size: 110%; width: 38%;" id="inpution" type="text" value="123 base 10 to base 2" />
+  <p>
+  <input style="margin: 1%; cursor: pointer;" id="button" type="button" value="Получить Ответ" onclick="onClick();" />
+  </p>
+  <div id="result" style="margin: 1%;"></div>
+</div>
+</div>
+	<div class="necolstory">Тут я оставлю ссылку на полезный канал по изучению JavaScript. Вот он: <a href="https://www.youtube.com/channel/UCo0SLZqKSBIYtv5PUlTua5Q" title="Уроки JavaScript" target="_blank" class="ti">Victor Stork</a>.</div>
+			<a href="../Index.html" class="back">Назад &larr;</a>
+		</div>
+	</div>
+</body>
+</html>
